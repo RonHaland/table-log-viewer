@@ -7,6 +7,8 @@
 <h1>Log Viewer</h1>
 
 <form>
+    <label>connectionString <input type="text" placeholder="table connection string" asp-for="ConnStr"/></label>
+    <br />
     <label>Log level: <select asp-items="Model.LogLevels" asp-for="SelectedLogLevel"></select></label>
     <label>From: <input type="datetime-local" asp-for="SelectedFrom"/></label>
     <label>To: <input type="datetime-local" asp-for="SelectedTo"/></label>

@@ -8,6 +8,7 @@ namespace LogViewer.Models
     {
         public IEnumerable<LogModelEvent> LogEvents { get; set; }
         public SelectList LogLevels { get; set; }
+        public string ConnStr { get; set; }
         public string SelectedLogLevel { get; set; }
         public DateTime? SelectedFrom { get; set; }
         public DateTime? SelectedTo { get; set; }

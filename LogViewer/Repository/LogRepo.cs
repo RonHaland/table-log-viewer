@@ -12,18 +12,19 @@ namespace LogViewer.Repository
     public class LogRepo : ILogRepo
     {
         
-        public LogRepo(IConfiguration config)
+        public LogRepo()
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(config.GetValue<string>("TableConnection"));
-
-            var tableClient = storageAccount.CreateCloudTableClient();
-            var tableRef = tableClient.GetTableReference("LogEventEntity");
-            tableRef.CreateIfNotExists();
-            TableRef = tableRef;
         }
 
-        public IEnumerable<MyLogEntity> GetAllLogEvents(LogEventLevel logLevel = LogEventLevel.Debug, DateTime? from = null, DateTime? to = null) 
+        public IEnumerable<MyLogEntity> GetAllLogEvents(string connStr, LogEventLevel logLevel = LogEventLevel.Debug, DateTime? from = null, DateTime? to = null) 
         {
+            if (string.IsNullOrWhiteSpace(connStr))
+                return new List<MyLogEntity>();
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connStr);
+
+            var tableClient = storageAccount.CreateCloudTableClient();
+            var tableRef = tableClient.GetTableReference("Logs");
+            tableRef.CreateIfNotExists();
             var allLogEvents = new[] { LogEventLevel.Verbose, LogEventLevel.Debug, LogEventLevel.Information, LogEventLevel.Warning, LogEventLevel.Error, LogEventLevel.Fatal };
             var validLogEvents = allLogEvents.Where(e => ((int)e) >= ((int)logLevel));
 
@@ -40,7 +41,7 @@ namespace LogViewer.Repository
 
             q = q.Where(filterString);
 
-            var entities = TableRef
+            var entities = tableRef
                 .ExecuteQuery(q)
                 .Where(l => validLogEvents
                     .Contains(l.Level));
@@ -56,7 +57,5 @@ namespace LogViewer.Repository
 
             return entities.OrderByDescending(p => p.Timestamp);
         }
-
-        public CloudTable TableRef { get; set; }
     }
 }

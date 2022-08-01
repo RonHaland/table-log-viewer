@@ -19,6 +19,8 @@ namespace LogViewer.Controllers
         public DateTime? SelectedFrom { get; set; }
         [BindProperty(SupportsGet = true)]
         public DateTime? SelectedTo { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string ConnStr { get; set; }
         #endregion
 
         public LogController(ILogRepo logRepo)
@@ -31,7 +33,7 @@ namespace LogViewer.Controllers
             SelectedLogLevel ??= "Debug";
             var selectedLogLevel = Enum.Parse<LogEventLevel>(SelectedLogLevel);
 
-            var entities = _logRepo.GetAllLogEvents(selectedLogLevel, SelectedFrom, SelectedTo);
+            var entities = _logRepo.GetAllLogEvents(ConnStr, selectedLogLevel, SelectedFrom, SelectedTo);
             
             var models = entities.Select(e => new LogModelEvent
             {

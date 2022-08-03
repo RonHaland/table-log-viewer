@@ -37,7 +37,7 @@ namespace LogViewer.Controllers
             
             var models = entities.Select(e => new LogModelEvent
             {
-                Time = e.Timestamp.DateTime.ToString("yyyy.MM.dd hh:mm.ss.fff"),
+                Time = e.Timestamp.DateTime.ToString("O"),
                 Level = e.Level.ToString(),
                 Message = e.Message,
                 IsDarkMode = false

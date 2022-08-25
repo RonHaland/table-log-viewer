@@ -33,7 +33,7 @@ namespace LogViewer.Controllers
             SelectedLogLevel ??= "Debug";
             var selectedLogLevel = Enum.Parse<LogEventLevel>(SelectedLogLevel);
 
-            var entities = _logRepo.GetAllLogEvents(ConnStr, selectedLogLevel, SelectedFrom, SelectedTo);
+            var entities = _logRepo.GetAllLogEvents(ConnStr, selectedLogLevel, SelectedFrom?.ToUniversalTime(), SelectedTo?.ToUniversalTime());
             
             var models = entities.Select(e => new LogModelEvent
             {
